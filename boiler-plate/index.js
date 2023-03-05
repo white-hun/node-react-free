@@ -19,6 +19,7 @@ mongoose
 
 app.get("/", (req, res) => res.send("Hello World!"));
 
+// register Router
 // 회원 가입 할때 필요한 정보들을 client에서 가져오면 정보들을 DB에 넣어준다
 app.post("/register", (req, res) => {
   // bodyParser를 통해 req.body에 client에 필요한 json 형식 데이터가 들어올 수 있다
