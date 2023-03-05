@@ -63,7 +63,7 @@ userSchema.pre("save", function (next) {
   }
 });
 
-//------------------------------------------------------------------------------------------------------
+//---comparePassword method-----------------------------------------------------------------------------
 userSchema.methods.comparePassword = function (plainPassword, cb) {
   // plainPassword가 맞다면 암호화된 비밀번호가 일치하는지 확인해야한다
   // plainPassword: 12345678
@@ -80,7 +80,7 @@ userSchema.methods.comparePassword = function (plainPassword, cb) {
   });
 };
 
-//------------------------------------------------------------------------------------------------------
+//---generateToken method-------------------------------------------------------------------------------
 userSchema.methods.generateToken = function (cb) {
   var user = this;
   // jsonwebtoken을 이용해서 token을 생성하기
@@ -93,6 +93,7 @@ userSchema.methods.generateToken = function (cb) {
     cb(null, user);
   });
 };
+
 //------------------------------------------------------------------------------------------------------
 
 const User = mongoose.model("User", userSchema);
