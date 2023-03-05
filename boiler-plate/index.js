@@ -1,6 +1,6 @@
-const express = require("express");
-const app = express();
-const port = 5000;
+const express = require("express"); // 다운받은 express 불러오기 = ES6 문법의 import 시스템
+const app = express(); // 새로운 express app을 만든다
+const port = 5000; // port 지정(백서버 지정)
 const bodyParser = require("body-parser");
 const { User } = require("./models/User");
 const config = require("./config/key");
@@ -38,9 +38,6 @@ app.post("/register", (req, res) => {
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
 //----------------------------------------------------------------------------
-// 다운받은 express 불러오기 = ES6 문법의 import 시스템
-// 새로운 express app을 만든다
-// port 지정(백서버 지정)
 
 // "/" : root directory
 // app에 get 요청 => Hello Woeld! 출력

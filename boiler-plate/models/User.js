@@ -49,14 +49,15 @@ userSchema.pre("save", function (next) {
     // salt 생성
     bcrypt.genSalt(saltRounds, function (err, salt) {
       if (err) return next(err);
-      // hash: 암호화된 비밀번호
+      // hash 생성(hash: 암호화된 비밀번호)
       bcrypt.hash(user.password, salt, function (err, hash) {
         if (err) return next(err);
         user.password = hash;
-        // 암호화가 끝나고 다음 코드를 진행 시킨다(save 라인)
+        // 암호화가 끝나고 다음 라인을 진행 시킨다(user.save())
         next();
       });
     });
+    // password가 아닌 다른 데이터를 바꿀 때는 다음 라인(user.save())으로 넘어가도록 else 작성
   } else {
     next();
   }
