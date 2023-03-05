@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+const jwt = require("jsonwebtoken");
 
 // Schema: DB에서 자요의 구조(개체, 속성, 관계)와 제약 조선에 대한 정의
 const userSchema = mongoose.Schema({
@@ -42,7 +43,6 @@ const userSchema = mongoose.Schema({
 userSchema.pre("save", function (next) {
   // userSchema 데이터를 지칭함
   var user = this;
-
   // password가 변경될 때만 암호화한다
   if (user.isModified("password")) {
     // 비밀번호 암호화
@@ -62,6 +62,38 @@ userSchema.pre("save", function (next) {
     next();
   }
 });
+
+//------------------------------------------------------------------------------------------------------
+userSchema.methods.comparePassword = function (plainPassword, cb) {
+  // plainPassword가 맞다면 암호화된 비밀번호가 일치하는지 확인해야한다
+  // plainPassword: 12345678
+  // hash: $2b$10$NBnuiUeAxr./GThdME9uUezmc4M1tlnqY5M5whSw2egx9Y/baKIBa
+  bcrypt.compare(plainPassword, this.password, function (err, isMatch) {
+    if (err)
+      // err
+      return (
+        cb(err),
+        //eles
+        // err가 없다면 err는 null, password 일치(true) isMatch= true를 comparePassword로 전달
+        cb(null, isMatch)
+      );
+  });
+};
+
+//------------------------------------------------------------------------------------------------------
+userSchema.methods.generateToken = function (cb) {
+  var user = this;
+  // jsonwebtoken을 이용해서 token을 생성하기
+  var token = jwt.sign(user._id.toHexString(), "secretToken"); // user._id + "secretToken" = token  // secretToken을 넣으면  user._id가 나온다
+  user.token = token;
+  user.save(function (err, user) {
+    if (err) return cb(err);
+    // else
+    // err가 없다면 err는 null, user 정보가 generateToken으로 전달
+    cb(null, user);
+  });
+};
+//------------------------------------------------------------------------------------------------------
 
 const User = mongoose.model("User", userSchema);
 
